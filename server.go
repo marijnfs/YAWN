@@ -45,7 +45,7 @@ func GetBodyRaw(name []byte) []byte {
 func getSubFromRequest(r *http.Request) string {
 	vars := mux.Vars(r)
 	sub := vars["sub"]
-	if sub == "" { sub = "root" }
+	if sub == "" || sub == "index.html" { sub = "root" }
 	return sub
 }
 
@@ -78,7 +78,7 @@ func EditPostHandler(w http.ResponseWriter, r *http.Request) {
 
 func PageHandler(w http.ResponseWriter, r *http.Request) {
 	sub := getSubFromRequest(r)
-	
+	fmt.Println("page: ", sub)
 	body := GetBody([]byte(sub))
 	page := Page{sub, string(body)}
 
@@ -120,5 +120,5 @@ func main() {
 	r.PathPrefix("/static/").Handler(http.StripPrefix("/static/", http.FileServer(http.Dir(Wd + "static/"))))
 	
 	
-	http.ListenAndServe("127.0.0.1:8181", handlers.CompressHandler(r))
+	http.ListenAndServe("127.0.0.1:1234", handlers.CompressHandler(r))
 }
