@@ -12,6 +12,12 @@
       a:hover {color:#2B1B17;}
       a:active {color:#2B1B17;}
     </style>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$']]}});
+    </script>
+    <script type="text/javascript"
+            src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML">
+    </script>
   </head>
 
   <body>
