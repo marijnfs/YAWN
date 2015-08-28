@@ -85,11 +85,6 @@ func PageHandler(w http.ResponseWriter, r *http.Request) {
 	body_template.Execute(w, page)
 }
 
-func RootRedirectHandler(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("root")
-	http.Redirect(w, r, "/", http.StatusOK)
-}
-
 func FaviconHandler(w http.ResponseWriter, r *http.Request) {
 	header := []byte("HTTP/1.1 200 OK\r\nContent-Type: image/x-icon\r\n\r\n")
 
