@@ -110,9 +110,10 @@ func main() {
 	//regular handlers
 	r.HandleFunc("/edit/{sub}", EditGetHandler).Methods("GET")
 	r.HandleFunc("/edit/{sub}", EditPostHandler).Methods("POST")
+	r.PathPrefix("/static/").Handler(http.StripPrefix("/static/", http.FileServer(http.Dir(Wd + "/static/"))))
 	r.HandleFunc("/{sub}", PageHandler)
 
-	r.PathPrefix("/static/").Handler(http.StripPrefix("/static/", http.FileServer(http.Dir(Wd + "static/"))))
+
 	
 	
 	http.ListenAndServe("127.0.0.1:1234", handlers.CompressHandler(r))
