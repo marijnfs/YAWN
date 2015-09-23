@@ -47,14 +47,14 @@ func Put(key, data []byte) {
 }
 
 //maps all data and replaces it!
-func Map(mapper func([]byte) []byte) {
+func Map(mapper func([]byte, []byte) []byte) {
 	log.Println("mapping")
 	it := db.NewIterator(ro)
 	defer it.Close()
 	for it.SeekToFirst(); it.Valid(); it.Next() {
 		log.Println("mapping key", string(it.Key()))
-		log.Println(mapper(it.Value()))
-		//Put(it.Key(), mapper(it.Value()))
+		log.Println(mapper(it.Key(), it.Value()))
+		Put(it.Key(), mapper(it.Key(), it.Value()))
 	}
 	if err := it.GetError(); err != nil {
 		log.Panic(err)

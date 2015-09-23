@@ -7,11 +7,14 @@ import (
 	"os"
 	"io/ioutil"
 	"text/template"
+	//"log"
 	//"html"
 
 	"github.com/gorilla/mux"
 	"github.com/gorilla/handlers"
 	"github.com/gorilla/schema"
+
+	//"github.com/boltdb/bolt"
 )
 
 var Wd string
@@ -98,11 +101,10 @@ func FaviconHandler(w http.ResponseWriter, r *http.Request) {
 
 
 func main() {
-	Map(func([]byte) (v []byte) {return MDToHTML(v)})
-	fmt.Println("Server Started in ", Wd)
 	r := mux.NewRouter()
+	//Map(func(k []byte, v []byte) ([]byte) { return MDToHTML(v)})
 
-
+	fmt.Println("Server Started in ", Wd)
 	r.HandleFunc("/favicon.ico", FaviconHandler)
 
 	//root handlers
