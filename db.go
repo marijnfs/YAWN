@@ -2,52 +2,41 @@ package main
 
 import (
 	"log"
-	"github.com/jmhodges/levigo"
+	"github.com/boltdb/bolt" 
 )
 
-var opts *levigo.Options
-var db *levigo.DB
-var filter *levigo.FilterPolicy
-var ro *levigo.ReadOptions
-var wo *levigo.WriteOptions
-
+var db *bolt.DB
 
 func init() {
 	var err error
-	
-	opts = levigo.NewOptions()
-
-	filter = levigo.NewBloomFilter(10)
-	opts.SetFilterPolicy(filter)
-	opts.SetCache(levigo.NewLRUCache(64<<20))
-	opts.SetCreateIfMissing(true)
-	
-	levigo.RepairDatabase("./db", opts)
-	db, err = levigo.Open("./db", opts)
-
+	db, err = bolt.Open("./bolt.db", 0666, &bolt.Options{Timeout:1})
 	check(err)
-	ro = levigo.NewReadOptions()
-	wo = levigo.NewWriteOptions()
+	//defer db.Close()
+	db.Update(func (tx *bolt.Tx) error { tx.CreateBucketIfNotExists([]byte("pages")); return nil})
 }
 
-func Get(key []byte) []byte {
-	data, err := db.Get(ro, key)
-	if err != nil {
-		log.Println("Key not found")
-		return []byte{}
-	}
-	return data
+
+
+func Get(key []byte) (v []byte) {
+	log.Println("get")
+	db.View(func(tx *bolt.Tx) error {
+		b := tx.Bucket([]byte("pages"))
+		log.Println(b==nil)
+		v = b.Get(key)
+		return nil
+	})
+	return
 }
 
 func Put(key, data []byte) {
-	err := db.Put(wo, key, data)
-	if err != nil {
-		log.Println("Could not save data")
-	}
+	db.Update(func(tx *bolt.Tx) error {
+		tx.Bucket([]byte("pages")).Put(key, data)
+		return nil
+	})
 }
 
 //maps all data and replaces it!
-func Map(mapper func([]byte, []byte) []byte) {
+/*func Map(mapper func([]byte, []byte) []byte) {
 	log.Println("mapping")
 	it := db.NewIterator(ro)
 	defer it.Close()
@@ -61,3 +50,4 @@ func Map(mapper func([]byte, []byte) []byte) {
 	}
 	log.Println("done")
 }
+*/
