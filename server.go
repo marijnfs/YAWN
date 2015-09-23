@@ -98,6 +98,7 @@ func FaviconHandler(w http.ResponseWriter, r *http.Request) {
 
 
 func main() {
+	//Map(func([]byte) (v []byte) {return})
 	fmt.Println("Server Started in ", Wd)
 	r := mux.NewRouter()
 

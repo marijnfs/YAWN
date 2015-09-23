@@ -43,3 +43,16 @@ func Put(key, data []byte) {
 		log.Println("Could not save data")
 	}
 }
+
+//maps all data and replaces it!
+func Map(mapper func([]byte) []byte) {
+	it := db.NewIterator(ro)
+	defer it.Close()
+	for it.SeekToFirst(); it.Valid(); it.Next() {
+		//log.Println("key", it.Key(), it.Value())
+		Put(it.Key(), mapper(it.Value()))
+	}
+	if err := it.GetError(); err != nil {
+		log.Panic(err)
+	}
+}
