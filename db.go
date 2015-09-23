@@ -21,6 +21,8 @@ func init() {
 	opts.SetFilterPolicy(filter)
 	opts.SetCache(levigo.NewLRUCache(64<<20))
 	opts.SetCreateIfMissing(true)
+	
+	levigo.RepairDatabase("./db", opts)
 	db, err = levigo.Open("./db", opts)
 
 	check(err)
@@ -46,13 +48,16 @@ func Put(key, data []byte) {
 
 //maps all data and replaces it!
 func Map(mapper func([]byte) []byte) {
+	log.Println("mapping")
 	it := db.NewIterator(ro)
 	defer it.Close()
 	for it.SeekToFirst(); it.Valid(); it.Next() {
-		//log.Println("key", it.Key(), it.Value())
-		Put(it.Key(), mapper(it.Value()))
+		log.Println("mapping key", string(it.Key()))
+		log.Println(mapper(it.Value()))
+		//Put(it.Key(), mapper(it.Value()))
 	}
 	if err := it.GetError(); err != nil {
 		log.Panic(err)
 	}
+	log.Println("done")
 }
