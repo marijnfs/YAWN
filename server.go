@@ -7,7 +7,7 @@ import (
 	"os"
 	"io/ioutil"
 	"text/template"
-	"html"
+	//"html"
 
 	"github.com/gorilla/mux"
 	"github.com/gorilla/handlers"
@@ -35,11 +35,13 @@ func init() {
 }
 
 func GetBody(name []byte) []byte {
-	return MDToHTML(GetBodyRaw(name))
+	//return MDToHTML(GetBodyRaw(name))
+	return GetBodyRaw(name)
 }
 
 func GetBodyRaw(name []byte) []byte {
-	return []byte(html.EscapeString(string(Get(name))))
+	return []byte(string(Get(name)))
+	//return []byte(html.EscapeString(string(Get(name))))
 }
 
 func getSubFromRequest(r *http.Request) string {
